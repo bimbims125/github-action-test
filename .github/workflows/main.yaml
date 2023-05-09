@@ -1,0 +1,32 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Nodejs
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install nodejs dependencies
+        run: |
+          yarn
+      - name: Run Webpack Build
+        run: |
+          yarn production
+      - name: Commit
+        run: |
+          git config --local user.name "bimbims125"
+          git config --local user.email "pramvendread@gmail.com"
+          git add .
+          git commit -m "[AUTO:BUILD] build from main.js"
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.TOKEN }}
+          branch: "master"
+          repository: "bimbims125/github-action-test
